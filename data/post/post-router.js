@@ -33,8 +33,6 @@ router.get('/:id', (req, res)=>{
     })
 })
 
-
-
 router.post('/', (req, res)=>{
 
     const body= req.body
@@ -51,6 +49,33 @@ router.post('/', (req, res)=>{
     })
     }
     
+})
+
+router.post('/:id/comments', (req,res)=>{
+    const id= +req.params.id
+    const body = req.body
+console.log('id ===>', id)
+    db.findById(id) //if Id exist
+    .then(post=>{
+        console.log('post==>', post)
+        if(post[0]){
+            body.post_id = id
+
+            db.insertComment(body)
+                .then(postComment=>{
+                    res.status(201).json(postComment)
+                })
+                .catch(err=>{
+                    res.status(500).json({message: 'Something strange'})
+                })
+        }else{
+            res.status(404).json({ message: "The post with the specified ID does not exist." })
+        }   
+    })
+    .catch(err=>{
+        res.status(500).json({message: 'ERROR FINDING POST'})
+    })
+
 })
 
 router.put('/:id', (req, res)=>{
@@ -90,4 +115,6 @@ router.delete('/:id', (req, res)=>{
 
     }
 })
+
+
 module.exports=router;
