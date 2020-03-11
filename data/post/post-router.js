@@ -78,6 +78,16 @@ console.log('id ===>', id)
 
 })
 
+router.get('/:id/comments', (req, res)=>{
+    const id= +req.params.id
+    const body= req.body
+
+    db.findPostComments(id)
+    .then(comments=>{
+        res.status(201).json(comments)
+    })
+})
+
 router.put('/:id', (req, res)=>{
     const id= req.params.id
     const body = req.body
